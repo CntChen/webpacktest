@@ -10,7 +10,7 @@ export default class Button {
 
     onClick(event) {
         event.preventDefault();
-        alert(this.link);
+        console.log(this.link);
     }
 
     render(node) {

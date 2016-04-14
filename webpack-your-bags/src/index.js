@@ -1,8 +1,8 @@
-import $ from 'jquery';
+if (document.querySelectorAll('.buttoncpmponent').length) {
+    require.ensure([], () => {
+        const Button = require('./Components/Button').default;
+        const button = new Button('google.com');
 
-import Button from './Components/Button';
-
-const button = new Button('google.com');
-button.render('#mybutton');
-
-//$('body').html('Hello');
+        button.render('.buttoncpmponent');
+    }, 'button');
+}
