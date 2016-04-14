@@ -15,6 +15,7 @@ export default class Button {
 
     render(node) {
         const text = $(node).text();
+        console.log(text);
 
         // Render our button
         $(node).html(
@@ -22,6 +23,6 @@ export default class Button {
         );
 
         // Attach our listeners
-        $('.button').click(this.onClick.bind(this));
+        $(node).click(this.onClick.bind(this));
     }
 }
