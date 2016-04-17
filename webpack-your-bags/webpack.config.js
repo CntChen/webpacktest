@@ -1,3 +1,6 @@
+var config = require('./config');
+var path = require('path');
+
 var webpack = require('webpack');
 var CleanPlugin = require('clean-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -5,12 +8,11 @@ var extractLESS = new ExtractTextPlugin('bundle.css', {
   allChunks: true,
 });
 
-// `"build": "set NODE_ENV=production&& webpack"`
-// no space before `&&`
 var production = process.env.NODE_ENV === 'production';
 
 var plugins = [
-  extractLESS, // <=== where should content be piped
+  new CleanPlugin('builds'),
+  extractLESS,
   new webpack.optimize.CommonsChunkPlugin({
     name: 'main',
     children: true,
@@ -20,7 +22,6 @@ var plugins = [
 
 if (production) {
   plugins = plugins.concat([
-    new CleanPlugin('builds'),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.MinChunkSizePlugin({
@@ -48,32 +49,37 @@ module.exports = {
   devtool: production ? false : 'eval',
   entry: './src',
   output: {
-    path: 'builds',
-    //filename: production ? '[name]-[hash].js' : 'bundle.js',
-    filename: 'bundle.js',
-    chunkFilename: '[name]-[chunkhash].js',
-    publicPath: 'builds/',
+    publicPath: config.defaultPath,
+    path: path.join(config.path.dist),
+    filename: production ? '[name]-[hash].js' : '[name].js',
+    chunkFilename: production ? './js/[name]-[chunkhash].js' : './js/[name].js',
   },
   plugins: plugins,
   module: {
+    preLoaders: [
+      /*{
+            test: /\.js$/,
+            loader: 'eslint',
+          }*/
+    ],
     loaders: [{
       test: /\.js$/,
-      loader: 'babel-loader',
-      exclude: /(node_modules|bower_components)/,
       include: /src/,
+      loader: 'babel-loader',
     }, {
       test: /\.less$/,
-      //loader: 'style!css!less',
       loader: extractLESS.extract('style', 'css!less'),
     }, {
-      test: /\.html/,
+      test: /\.html$/,
       loader: 'html',
-    },{
+    }, {
       test: /\.(png|gif|jpe?g|svg)$/i,
       loader: 'url',
       query: {
         limit: 10000,
-      }
+        name: './images/[name].[ext]',
+      },
     }],
+    postLoaders: [],
   }
 };

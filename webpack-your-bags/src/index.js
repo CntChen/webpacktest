@@ -1,14 +1,14 @@
 import './styles.less';
 
-var buttonComponents = document.querySelectorAll('.buttoncomponent');
+const buttonComponents = document.querySelectorAll('.buttoncomponent');
 
 if (buttonComponents.length > 0) {
     require.ensure([], () => {
         const Button = require('./Components/Button').default;
 
         [...buttonComponents].forEach((buttoncomponent) => {
-          const button = new Button('google.com');
-          button.render('#' + buttoncomponent.id);
+            const button = new Button('google.com');
+            button.render('#' + buttoncomponent.id);
         });
     }, 'button');
 }
