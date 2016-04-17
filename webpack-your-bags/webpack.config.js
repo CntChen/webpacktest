@@ -1,14 +1,16 @@
 var webpack = require('webpack');
 var CleanPlugin = require('clean-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var myExtractTextPlugin = new ExtractTextPlugin('bundle.css');
+var extractLESS = new ExtractTextPlugin('bundle.css', {
+  allChunks: true,
+});
 
 // `"build": "set NODE_ENV=production&& webpack"`
 // no space before `&&`
 var production = process.env.NODE_ENV === 'production';
 
 var plugins = [
-  myExtractTextPlugin, // <=== where should content be piped
+  extractLESS, // <=== where should content be piped
   new webpack.optimize.CommonsChunkPlugin({
     name: 'main',
     children: true,
@@ -62,10 +64,16 @@ module.exports = {
     }, {
       test: /\.less$/,
       //loader: 'style!css!less',
-      loader: myExtractTextPlugin.extract('css!less'),
+      loader: extractLESS.extract('style', 'css!less'),
     }, {
       test: /\.html/,
       loader: 'html',
+    },{
+      test: /\.(png|gif|jpe?g|svg)$/i,
+      loader: 'url',
+      query: {
+        limit: 10000,
+      }
     }],
   }
 };
