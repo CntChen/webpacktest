@@ -4,6 +4,7 @@ var path = require('path');
 var webpack = require('webpack');
 var CleanPlugin = require('clean-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var extractLESS = new ExtractTextPlugin('bundle.css', {
   allChunks: true,
 });
@@ -17,6 +18,11 @@ var plugins = [
     name: 'main',
     children: true,
     minChunks: 2,
+  }),
+  new HtmlWebpackPlugin({
+    title: 'webpack test',
+    filename: './index.html',
+    template: './src/index.html'
   })
 ];
 
@@ -49,7 +55,7 @@ module.exports = {
   devtool: production ? false : 'eval',
   entry: './src',
   output: {
-    publicPath: config.defaultPath,
+    publicPath: '',
     path: path.join(config.path.dist),
     filename: production ? '[name]-[hash].js' : '[name].js',
     chunkFilename: production ? './js/[name]-[chunkhash].js' : './js/[name].js',
@@ -81,5 +87,18 @@ module.exports = {
       },
     }],
     postLoaders: [],
+  },
+  devServer: production ? {} : {
+    port: 8080,
+    contentBase: 'builds',
+    hot: true,
+    historyApiFallback: true,
+    publicPath: "",
+    stats: {
+      colors: true
+    },
+    plugins: [
+      new webpack.HotModuleReplacementPlugin()
+    ]
   }
 };

@@ -1,10 +1,10 @@
 import './styles.less';
-
 const buttonComponents = document.querySelectorAll('.buttoncomponent');
 
 if (buttonComponents.length > 0) {
     require.ensure([], () => {
-        const Button = require('./Components/Button').default;
+        const Button = require('./Components/Button')
+            .default;
 
         [...buttonComponents].forEach((buttoncomponent) => {
             const button = new Button('google.com');
@@ -13,10 +13,13 @@ if (buttonComponents.length > 0) {
     }, 'button');
 }
 
-if (document.querySelectorAll('h1').length) {
+if (document.querySelectorAll('h1')
+    .length) {
     require.ensure([], () => {
-        const Header = require('./Components/Header').default;
+        const Header = require('./Components/Header')
+            .default;
 
-        new Header().render('h1');
+        new Header()
+            .render('h1');
     }, 'header');
 }
